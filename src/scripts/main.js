@@ -31,7 +31,7 @@ firstPromise
     // console.log(a);
   })
   .catch((y) => {
-    // console.log(y);
+    console.log();
     const firstPromiseDiv = document.createElement('div');
 
     firstPromiseDiv.setAttribute('data-qa', 'notification');
@@ -84,6 +84,6 @@ Promise.all([firstPromise, secondPromise])
 
     thirdPromiseDiv.setAttribute('data-qa', 'notification');
     thirdPromiseDiv.classList.add('error');
-    thirdPromiseDiv.innerHTML = y;
+    thirdPromiseDiv.innerHTML = 'Third promise was rejected';
     body.appendChild(thirdPromiseDiv);
   });
