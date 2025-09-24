@@ -4,6 +4,7 @@ const body = document.querySelector('body');
 
 const firstPromise = new Promise((resolve, reject) => {
   function z() {
+    clearTimeout();
     resolve('First promise was resolved');
     // console.log('jj');
   }
@@ -31,7 +32,6 @@ firstPromise
     // console.log(a);
   })
   .catch((y) => {
-    console.log();
     const firstPromiseDiv = document.createElement('div');
 
     firstPromiseDiv.setAttribute('data-qa', 'notification');
@@ -53,6 +53,14 @@ const secondPromise = new Promise((resolve, reject) => {
     },
     { once: true },
   );
+
+  document.addEventListener(
+    'click',
+    (e) => {
+      resolve('Second promise was resolve');
+    },
+    { once: true },
+  );
 });
 
 secondPromise.then((d) => {
@@ -68,16 +76,50 @@ secondPromise.then((d) => {
 
 // console.log(secondPromise);
 
-Promise.all([firstPromise, secondPromise])
-  .then((results) => {
+const thirdPromise = new Promise((resolve, reject) => {
+  let leftClicked = false;
+  let rightClicked = false;
+
+  const clickHandler = (e) => {
+    if (e.button === 0) {
+      leftClicked = true;
+    }
+
+    if (leftClicked && rightClicked) {
+      resolve('Third promise was resolved');
+    }
+  };
+
+  const contextMenuHandler = (e) => {
+    e.preventDefault();
+    rightClicked = true;
+
+    if (leftClicked && rightClicked) {
+      resolve('Third promise was resolved');
+    }
+  };
+
+  document.addEventListener('click', clickHandler);
+  document.addEventListener('contextmenu', contextMenuHandler);
+
+  setTimeout(() => {
+    document.removeEventListener('click', clickHandler);
+    document.removeEventListener('contextmenu', contextMenuHandler);
+
+    if (!leftClicked || !rightClicked) {
+      reject(new Error('Third promise was rejected'));
+    }
+  }, 3000); // Reject after 5 seconds if not both clicks
+});
+
+thirdPromise
+  .then((message) => {
     const thirdPromiseDiv = document.createElement('div');
 
     thirdPromiseDiv.setAttribute('data-qa', 'notification');
-
     thirdPromiseDiv.classList.add('success');
-    thirdPromiseDiv.innerHTML = 'Third promise was resolved';
+    thirdPromiseDiv.innerHTML = message;
     body.appendChild(thirdPromiseDiv);
-    // console.log('Оба промиса выполнены:', results);
   })
   .catch(() => {
     const thirdPromiseDiv = document.createElement('div');
