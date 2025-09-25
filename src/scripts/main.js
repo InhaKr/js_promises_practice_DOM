@@ -31,12 +31,12 @@ firstPromise
     body.appendChild(firstPromiseDiv);
     // console.log(a);
   })
-  .catch((y) => {
+  .catch(() => {
     const firstPromiseDiv = document.createElement('div');
 
     firstPromiseDiv.setAttribute('data-qa', 'notification');
     firstPromiseDiv.classList.add('error');
-    firstPromiseDiv.innerHTML = y;
+    firstPromiseDiv.innerHTML = 'First promise was rejected';
     body.appendChild(firstPromiseDiv);
   });
 
@@ -86,6 +86,7 @@ const thirdPromise = new Promise((resolve, reject) => {
     }
 
     if (leftClicked && rightClicked) {
+      clearTimeout();
       resolve('Third promise was resolved');
     }
   };
@@ -95,6 +96,7 @@ const thirdPromise = new Promise((resolve, reject) => {
     rightClicked = true;
 
     if (leftClicked && rightClicked) {
+      clearTimeout();
       resolve('Third promise was resolved');
     }
   };
@@ -109,7 +111,7 @@ const thirdPromise = new Promise((resolve, reject) => {
     if (!leftClicked || !rightClicked) {
       reject(new Error('Third promise was rejected'));
     }
-  }, 3000); // Reject after 5 seconds if not both clicks
+  }, 3000);
 });
 
 thirdPromise
